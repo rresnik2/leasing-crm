@@ -59,7 +59,12 @@ The built files will be in the `dist` directory, ready for deployment.
 
 ## 📸 Screenshots
 
-*Screenshots coming soon after deployment*
+### Lead Management
+
+![Search and Filter, Add New Lead](./images/screenshot1.png)
+
+### Edit Lead
+![Edit Lead](./images/screenshot2.png)
 
 ## 🎯 Use Cases
 

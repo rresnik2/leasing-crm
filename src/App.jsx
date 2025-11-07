@@ -60,6 +60,43 @@ function App() {
     status: "Search Hold",
     moveInDate: "2026-05-01",
     unitType: "Studio"
+  },
+  ,
+  {
+    id: 8,
+    name: "Robert & Amy Johnson",
+    email: "johnson.family@email.com",
+    phone: "(425) 555-0154",
+    status: "Tour Completed",
+    moveInDate: "2025-03-01",
+    unitType: "3 Bedroom"
+  },
+  {
+    id: 9,
+    name: "Alex Rivera",
+    email: "arivera.seattle@gmail.com",
+    phone: "(206) 555-0121",
+    status: "New Inquiry",
+    moveInDate: "2025-02-15",
+    unitType: "1 Bedroom"
+  },
+  {
+    id: 6,
+    name: "David Park",
+    email: "dpark89@outlook.com",
+    phone: "(425) 555-0189",
+    status: "Contacted",
+    moveInDate: "2025-01-30",
+    unitType: "2 Bedroom"
+  },
+  {
+    id: 7,
+    name: "Lisa Thompson",
+    email: "lisa.thompson@uw.edu",
+    phone: "(206) 555-0167",
+    status: "Leased",
+    moveInDate: "2024-12-01",
+    unitType: "Studio"
   }
     ];
   });
