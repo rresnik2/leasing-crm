@@ -20,6 +20,11 @@ A modern CRM system built specifically for apartment leasing professionals, feat
 - **JavaScript ES6+** - Modern JavaScript features
 - **Local Storage API** - Client-side data persistence
 
+## 🤓 Knowledge Used So Far
+- CRUD Operations
+- React
+- GUIs
+
 ## 💻 Getting Started
 
 ### Prerequisites
@@ -30,7 +35,7 @@ A modern CRM system built specifically for apartment leasing professionals, feat
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/leasing-crm.git
+git clone https://github.com/rresnik2/leasing-crm.git
 cd leasing-crm
 ```
 
