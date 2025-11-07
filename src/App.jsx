@@ -61,7 +61,7 @@ function App() {
     moveInDate: "2026-05-01",
     unitType: "Studio"
   },
-  ,
+  
   {
     id: 8,
     name: "Robert & Amy Johnson",
