@@ -1,5 +1,7 @@
 # Leasing CRM
 
+🏠 **Live Demo:** https://leasing-crm.vercel.app/
+
 A modern CRM system built specifically for apartment leasing professionals, featuring lead tracking, status management, and conversion analytics.
 
 ## 🚀 Features
@@ -19,6 +21,7 @@ A modern CRM system built specifically for apartment leasing professionals, feat
 - **Tailwind CSS v3** - Utility-first CSS framework
 - **JavaScript ES6+** - Modern JavaScript features
 - **Local Storage API** - Client-side data persistence
+- **Vercel** - Prototype deployment
 
 ## 🤓 Knowledge Used So Far
 - CRUD Operations

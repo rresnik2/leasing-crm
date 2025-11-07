@@ -16,26 +16,51 @@ function App() {
     // Default leads if nothing in storage
     return [
       {
-        id: 1,
-        name: "Sarah Johnson",
-        email: "sarah@email.com",
-        phone: "(206) 555-0101",
-        status: "New Inquiry"
-      },
-      {
-        id: 2,
-        name: "Mike Chen",
-        email: "mike@email.com",
-        phone: "(206) 555-0102",
-        status: "Search Hold"
-      },
-      {
-        id: 3,
-        name: "Emily Davis",
-        email: "emily@email.com",
-        phone: "(206) 555-0103",
-        status: "Applied"
-      }
+    id: 1,
+    name: "Sarah Mitchell",
+    email: "sarah.mitchell@email.com",
+    phone: "(206) 555-1234",
+    status: "Tour Completed",
+    moveInDate: "2025-12-01",
+    unitType: "2 Bedroom"
+  },
+  {
+    id: 2,
+    name: "Marcus Chen",
+    email: "mchen92@email.com",
+    phone: "(425) 555-5678",
+    status: "Leased",
+    moveInDate: "2025-01-15",
+    unitType: "1 Bedroom"
+  },
+  {
+    id: 3,
+    name: "Jennifer Davis",
+    email: "jdavis.seattle@email.com",
+    phone: "(206) 555-9012",
+    status: "New Inquiry",
+    moveInDate: "2025-11-11",
+    unitType: "Studio"
+  }
+  ,
+  {
+    id: 4,
+    name: "Ken Doll",
+    email: "mymansion@email.com",
+    phone: "(425) 986-1238",
+    status: "Leased Elsewhere",
+    moveInDate: "2025-12-31",
+    unitType: "3 Bedroom"
+  },
+  {
+    id: 5,
+    name: "Ben Jamin",
+    email: "beninseattle@email.com",
+    phone: "(206) 555-0921",
+    status: "Search Hold",
+    moveInDate: "2026-05-01",
+    unitType: "Studio"
+  }
     ];
   });
 
@@ -141,8 +166,23 @@ function App() {
           onDelete={() => handleDeleteLead(lead.id)} 
           onEdit={(updatedData) => handleEditLead(lead.id, updatedData)}/>))}
       </div>
+      <footer className="mt-8 py-4 text-center text-gray-500 text-sm border-t">
+  <p>
+    Built by Reece Resnik | 
+    <a 
+      href="https://github.com/rresnik2/leasing-crm" 
+      className="ml-1 text-blue-600 hover:underline"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      View on GitHub
+    </a>
+  </p>
+</footer>
     </div>
+    
   );
+  
 }
 
 export default App;
