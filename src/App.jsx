@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
 import LeadCard from './components/LeadCard';
 import AddLeadForm from './components/AddLeadForm';
+// import Dashboard from './components/Dashboard';
+import LeadModal from './components/LeadModal';
 
 function App() {
   
+  const [currentView, setCurrentView] = useState('leads');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [sortBy, setSortBy] = useState('name');
+  const [selectedLead, setSelectedLead] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [leads, setLeads] = useState(() => {
     const savedLeads = localStorage.getItem('crmLeads');
@@ -143,9 +148,18 @@ function App() {
     // Update the lead with this id
     setLeads(filteredAndSortedLeads.map(lead => lead.id === id ? { ...lead, ...updatedData } : lead
   ));
-    
   };
 
+  const handleCardClick = (lead) => {
+    setSelectedLead(lead);
+    setIsModalOpen(true);
+  }
+
+  const handleModalSave = (updatedLead) => {
+  setLeads(leads.map(lead => 
+    lead.id === updatedLead.id ? updatedLead : lead
+  ));
+};
 
   return (
     <div className="min-h-screen bg-blue-100 p-8">
@@ -201,7 +215,8 @@ function App() {
           moveInDate={lead.moveInDate}
           unitType={lead.unitType}
           onDelete={() => handleDeleteLead(lead.id)} 
-          onEdit={(updatedData) => handleEditLead(lead.id, updatedData)}/>))}
+          onEdit={(updatedData) => handleEditLead(lead.id, updatedData)}
+          onCardClick={handleCardClick}/>))}
       </div>
       <footer className="mt-8 py-4 text-center text-gray-500 text-sm border-t">
   <p>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function LeadCard({ name, email, phone, status, moveInDate, unitType, onDelete, onEdit }) {
+function LeadCard({ name, email, phone, status, moveInDate, unitType, onDelete, onEdit, onCardClick }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editStatus, setEditStatus] = useState(status);
   const [editName, setEditName] = useState(name);
@@ -23,20 +23,20 @@ function LeadCard({ name, email, phone, status, moveInDate, unitType, onDelete, 
   ];
 
   function getStatusColor(status) {
-  const colors = {
-    "New Inquiry": "bg-blue-100 text-blue-800",
-    "Contacted": "bg-yellow-100 text-yellow-800",
-    "Tour Scheduled": "bg-purple-100 text-purple-800",
-    "Tour Completed": "bg-indigo-100 text-indigo-800",
-    "Application Submitted": "bg-orange-100 text-orange-800",
-    "Approved": "bg-green-100 text-green-800",
-    "Leased": "bg-teal-100 text-teal-800",
-    "Leased Elsewhere": "bg-red-200 text-red-900",
-    "Search Hold": "bg-rose-200 text-rose-900",
-    "Not Interested": "bg-gray-100 text-gray-800"
-  };
-  return colors[status] || "bg-gray-100 text-gray-800";
-}
+    const colors = {
+      "New Inquiry": "bg-blue-100 text-blue-800",
+      "Contacted": "bg-yellow-100 text-yellow-800",
+      "Tour Scheduled": "bg-purple-100 text-purple-800",
+      "Tour Completed": "bg-indigo-100 text-indigo-800",
+      "Application Submitted": "bg-orange-100 text-orange-800",
+      "Approved": "bg-green-100 text-green-800",
+      "Leased": "bg-teal-100 text-teal-800",
+      "Leased Elsewhere": "bg-red-200 text-red-900",
+      "Search Hold": "bg-rose-200 text-rose-900",
+      "Not Interested": "bg-gray-100 text-gray-800"
+    };
+    return colors[status] || "bg-gray-100 text-gray-800";
+  }
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -62,12 +62,19 @@ function LeadCard({ name, email, phone, status, moveInDate, unitType, onDelete, 
     setEditMoveInDate(moveInDate);
     setEditUnitType(unitType);
     setIsEditing(false);
-    
+
   };
   // editing display mode
   if (isEditing) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="bg-white p-6 rounded-lg shadow-md"
+        onClick={() => {
+          // Only trigger if we're NOT in editing mode
+          if (!isEditing) {
+            onCardClick(lead);
+          }
+        }}
+      >
         <input
           type="text"
           value={editName}
@@ -111,16 +118,22 @@ function LeadCard({ name, email, phone, status, moveInDate, unitType, onDelete, 
             <option key={option} value={option}>{option}</option>
           ))}
         </select>
-        
+
         <div className="flex gap-2 mt-4">
           <button
-            onClick={handleSave}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSave(e);
+            }}
             className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
           >
             Save
           </button>
           <button
-            onClick={handleCancel}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCancel();
+            }}
             className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
           >
             Cancel
@@ -132,12 +145,15 @@ function LeadCard({ name, email, phone, status, moveInDate, unitType, onDelete, 
 
   // Normal display mode
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
+    <div className="bg-white p-6 rounded-lg shadow-md" onClick={() => !isEditing && onCardClick({
+      id: Date.now(), // You'll need to pass id as a prop from App.jsx
+      name, email, phone, status, moveInDate, unitType
+    })}>
       <div className='flex justify-between items-start mb-3'>
         <h2 className="text-xl font-bold text-gray-800">{name}</h2>
         <span className={`px-2 py-1 rounded text-sm ${getStatusColor(status)}`}>
-        {status}
-      </span>
+          {status}
+        </span>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
         <div>
@@ -157,22 +173,28 @@ function LeadCard({ name, email, phone, status, moveInDate, unitType, onDelete, 
           <p className='text-gray-900'>{unitType}</p>
         </div>
       </div>
-      
+
       <div className="flex gap-2 mt-4">
         <button
-          onClick={() => setIsEditing(true)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsEditing(true);
+          }}
           className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
         >
           Edit
         </button>
         <button
-          onClick={onDelete}
+          onClick={(e) => {
+            e.stopPropagation();
+            {onDelete};
+          }}
           className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
         >
           Delete
         </button>
       </div>
-      
+
     </div>
   );
 }
