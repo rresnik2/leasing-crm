@@ -5,7 +5,7 @@ import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'fireb
 import { db } from './firebase';
 // import Dashboard from './components/Dashboard';
 import LeadModal from './components/LeadModal';
-import { seedDatabase } from './seedDatabase';
+// import { seedDatabase } from './seedDatabase';
 
 function App() {
 

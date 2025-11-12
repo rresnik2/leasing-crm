@@ -1,6 +1,8 @@
 // src/components/AddLeadForm.jsx
 import { useState } from 'react';
 
+import PhoneInput from './PhoneInput';
+
 function AddLeadForm({ onAddLead }) {
     // Create state for form inputs
     const [name, setName] = useState('');
@@ -9,19 +11,24 @@ function AddLeadForm({ onAddLead }) {
     const [moveInDate, setMoveInDate] = useState('');
     const [unitType, setUnitType] = useState('');
 
+    const handlePhoneChange = (e) => {
+        const formatted = formatPhoneNumber(e.target.value);
+        setPhone(formatted);
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault(); // Prevent page refresh
 
-        
+
         // create a new lead
         const newLead = {
-          
-            name: name,       
-            email: email,  
-            phone: phone,   
-            status: "New Inquiry",  
+
+            name: name,
+            email: email,
+            phone: phone,
+            status: "New Inquiry",
             moveInDate: moveInDate,
-            unitType: unitType  
+            unitType: unitType
         };
         //set state values
         onAddLead(newLead);
@@ -60,38 +67,36 @@ function AddLeadForm({ onAddLead }) {
             </div>
             <div className="mb-4">
                 <label className="block text-gray-700 mb-2">Phone:</label>
-                <input
-                    type="phone"
+                <PhoneInput
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full p-2 border rounded"
                     required
                 />
             </div>
-            
+
             <div>
-                    <label className="block text-gray-700 mb-2">Move-in Date:</label>
-                    <input
-                        type="date"
-                        value={moveInDate}
-                        onChange={(e) => setMoveInDate(e.target.value)}
-                        className="w-full p-2 border rounded"
-                    />
-                </div>
-                
-                <div>
-                    <label className="block text-gray-700 mb-2">Unit Type:</label>
-                    <select
-                        value={unitType}
-                        onChange={(e) => setUnitType(e.target.value)}
-                        className="w-full p-2 border rounded"
-                    >
-                        <option value="Studio">Studio</option>
-                        <option value="1 Bedroom">1 Bedroom</option>
-                        <option value="2 Bedroom">2 Bedroom</option>
-                        <option value="3 Bedroom">3 Bedroom</option>
-                    </select>
-                </div>
+                <label className="block text-gray-700 mb-2">Move-in Date:</label>
+                <input
+                    type="date"
+                    value={moveInDate}
+                    onChange={(e) => setMoveInDate(e.target.value)}
+                    className="w-full p-2 border rounded mb-2"
+                />
+            </div>
+
+            <div>
+                <label className="block text-gray-700 mb-2 ">Unit Type:</label>
+                <select
+                    value={unitType}
+                    onChange={(e) => setUnitType(e.target.value)}
+                    className="w-full p-2 border rounded mb-3"
+                >
+                    <option value="Studio">Studio</option>
+                    <option value="1 Bedroom">1 Bedroom</option>
+                    <option value="2 Bedroom">2 Bedroom</option>
+                    <option value="3 Bedroom">3 Bedroom</option>
+                </select>
+            </div>
 
             <button
                 type="submit"

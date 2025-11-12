@@ -1,8 +1,12 @@
 import { useState } from 'react';
 
+import PhoneInput from './PhoneInput';
+import { formatForDisplay } from '../utils/phoneUtils';
+
 function LeadModal({ lead, isOpen, onClose, onSave, onDelete }) {
     const [editedLead, setEditedLead] = useState({
         ...lead,
+        phone: lead?.phone ? formatForDisplay(lead.phone) : "",
         occupants: lead?.occupants || 1,
         pets: lead?.pets || "",
         notes: lead?.notes || "",
@@ -49,11 +53,9 @@ function LeadModal({ lead, isOpen, onClose, onSave, onDelete }) {
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Phone</label>
-                            <input
-                                type="tel"
+                            <PhoneInput
                                 value={editedLead.phone}
                                 onChange={(e) => setEditedLead({ ...editedLead, phone: e.target.value })}
-                                className="mt-1 w-full p-2 border rounded"
                             />
                         </div>
                     </div>

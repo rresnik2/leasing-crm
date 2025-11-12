@@ -1,6 +1,8 @@
 import { useState } from 'react';
+// import { formatPhoneNumber } from '../utils/formatters';
+import { formatForDisplay } from '../utils/phoneUtils';
 
-function LeadCard({ lead, name, email, phone, status, moveInDate, unitType, onDelete, onEdit, onCardClick }) {
+function LeadCard({ lead, name, email, phone, status, moveInDate, unitType, onEdit, onCardClick }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editStatus, setEditStatus] = useState(status);
   const [editName, setEditName] = useState(name);
@@ -8,6 +10,7 @@ function LeadCard({ lead, name, email, phone, status, moveInDate, unitType, onDe
   const [editPhone, setEditPhone] = useState(phone);
   const [editMoveInDate, setEditMoveInDate] = useState(moveInDate);
   const [editUnitType, setEditUnitType] = useState(unitType);
+  
 
   const statusOptions = [
     "New Inquiry",
@@ -159,7 +162,7 @@ function LeadCard({ lead, name, email, phone, status, moveInDate, unitType, onDe
         </div>
         <div>
           <p className='text-green-800'>Phone</p>
-          <p className='text-gray-900'>{phone}</p>
+          <p className='text-gray-900'>{formatForDisplay(phone)}</p>
         </div>
         <div>
           <p className='text-green-800'>Move-In Date</p>

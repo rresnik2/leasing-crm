@@ -10,7 +10,7 @@ A modern CRM system built specifically for apartment leasing professionals, feat
 - **Status Tracking**: Monitor leads through the leasing pipeline (New Inquiry → Tour → Application → Leased)
 - **Search & Filter**: Find leads quickly by name, email, or status
 - **Smart Sorting**: Organize leads by name or status
-- **Data Persistence**: All data saved locally using browser storage
+- **Data Persistence**: All data saved on a Firebase database
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 - **Real-time Updates**: Instant search and filter results as you type
 
@@ -20,8 +20,8 @@ A modern CRM system built specifically for apartment leasing professionals, feat
 - **Vite** - Lightning-fast build tool and development server
 - **Tailwind CSS v3** - Utility-first CSS framework
 - **JavaScript ES6+** - Modern JavaScript features
-- **Local Storage API** - Client-side data persistence
 - **Vercel** - Prototype deployment
+- **Firebase** - Server side data persistence
 
 ## 🤓 Knowledge Used So Far
 - CRUD Operations
@@ -96,13 +96,12 @@ The CRM tracks leads through these stages:
 ## 🔜 Future Enhancements
 
 - [ ] Dashboard with conversion analytics
-- [ ] Backend API integration (Node.js/Express)
+- [X] Backend API integration (Firebase)
 - [ ] User authentication and multi-user support
 - [ ] Email integration for automated follow-ups
 - [ ] Export leads to CSV/Excel
-- [ ] Multi-property support
 - [ ] Calendar integration for tour scheduling
-- [ ] Notes and communication history
+- [\] Notes and communication history
 - [ ] Advanced reporting and metrics
 
 ## 🤝 Contributing

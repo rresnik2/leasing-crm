@@ -24,6 +24,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "awesome-phonenumber": "^7.6.0",
     "firebase": "^12.5.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
