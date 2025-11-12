@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function LeadCard({ name, email, phone, status, moveInDate, unitType, onDelete, onEdit, onCardClick }) {
+function LeadCard({ lead, name, email, phone, status, moveInDate, unitType, onDelete, onEdit, onCardClick }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editStatus, setEditStatus] = useState(status);
   const [editName, setEditName] = useState(name);
@@ -145,10 +145,7 @@ function LeadCard({ name, email, phone, status, moveInDate, unitType, onDelete, 
 
   // Normal display mode
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md" onClick={() => !isEditing && onCardClick({
-      id: Date.now(), // You'll need to pass id as a prop from App.jsx
-      name, email, phone, status, moveInDate, unitType
-    })}>
+    <div className="bg-white p-6 rounded-lg shadow-md" onClick={() => !isEditing && onCardClick(lead)}>
       <div className='flex justify-between items-start mb-3'>
         <h2 className="text-xl font-bold text-gray-800">{name}</h2>
         <span className={`px-2 py-1 rounded text-sm ${getStatusColor(status)}`}>
@@ -175,7 +172,7 @@ function LeadCard({ name, email, phone, status, moveInDate, unitType, onDelete, 
       </div>
 
       <div className="flex gap-2 mt-4">
-        <button
+        {/* <button
           onClick={(e) => {
             e.stopPropagation();
             setIsEditing(true);
@@ -183,16 +180,17 @@ function LeadCard({ name, email, phone, status, moveInDate, unitType, onDelete, 
           className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
         >
           Edit
-        </button>
-        <button
+        </button> */}
+        {/* <button
           onClick={(e) => {
             e.stopPropagation();
-            {onDelete};
+            onDelete();
+
           }}
           className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
         >
           Delete
-        </button>
+        </button> */}
       </div>
 
     </div>

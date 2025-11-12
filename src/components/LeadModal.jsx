@@ -1,13 +1,25 @@
 import { useState } from 'react';
 
-function LeadModal({ lead, isOpen, onClose, onSave }) {
-    const [editedLead, setEditedLead] = useState(lead);
+function LeadModal({ lead, isOpen, onClose, onSave, onDelete }) {
+    const [editedLead, setEditedLead] = useState({
+        ...lead,
+        occupants: lead?.occupants || 1,
+        pets: lead?.pets || "",
+        notes: lead?.notes || "",
+        address: lead?.address || "",
+        employer: lead?.employer || "",
+        moveReason: lead?.moveReason || "",
+        email: lead?.email || "",
+        status: lead?.status || "New Inquiry",
+        moveInDate: lead?.moveInDate || "",
+        unitType: lead?.unitType || ""
+    });
 
     if (!isOpen) return null;
 
     const handleSave = () => {
-        onSave(editedLead);
-        onClose();
+        onSave(editedLead);  // Just pass the editedLead state
+        onClose();           // Close the modal after saving
     };
 
     return (
@@ -45,7 +57,60 @@ function LeadModal({ lead, isOpen, onClose, onSave }) {
                             />
                         </div>
                     </div>
-
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Email</label>
+                            <input
+                                type="email"
+                                value={editedLead.email || ''}
+                                onChange={(e) => setEditedLead({ ...editedLead, email: e.target.value })}
+                                className="mt-1 w-full p-2 border rounded"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Status</label>
+                            <select
+                                value={editedLead.status || 'New Inquiry'}
+                                onChange={(e) => setEditedLead({ ...editedLead, status: e.target.value })}
+                                className="mt-1 w-full p-2 border rounded"
+                            >
+                                <option value="New Inquiry">New Inquiry</option>
+                                <option value="Contacted">Contacted</option>
+                                <option value="Tour Scheduled">Tour Scheduled</option>
+                                <option value="Tour Completed">Tour Completed</option>
+                                <option value="Application Submitted">Application Submitted</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Leased">Leased</option>
+                                <option value="Not Interested">Not Interested</option>
+                                <option value="Search Hold">Search Hold</option>
+                                <option value="Leased Elsewhere">Leased Elsewhere</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Move-In Date</label>
+                            <input
+                                type="date"
+                                value={editedLead.moveInDate || ''}
+                                onChange={(e) => setEditedLead({ ...editedLead, moveInDate: e.target.value })}
+                                className="mt-1 w-full p-2 border rounded"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Unit Type</label>
+                            <select
+                                value={editedLead.unitType || '1 Bedroom'}
+                                onChange={(e) => setEditedLead({ ...editedLead, unitType: e.target.value })}
+                                className="mt-1 w-full p-2 border rounded"
+                            >
+                                <option value="Studio">Studio</option>
+                                <option value="1 Bedroom">1 Bedroom</option>
+                                <option value="2 Bedroom">2 Bedroom</option>
+                                <option value="3 Bedroom">3 Bedroom</option>
+                            </select>
+                        </div>
+                    </div>
 
 
                     <div>
@@ -109,11 +174,20 @@ function LeadModal({ lead, isOpen, onClose, onSave }) {
                             <option value="Other">Other</option>
                         </select>
                     </div>
-                    
+
                 </div>
 
                 {/* Action Buttons */}
                 <div className="flex justify-end space-x-3 mt-6">
+                    <button
+                        onClick={() => {
+                            onDelete();
+                            onClose();
+                        }}
+                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                    >
+                        Delete
+                    </button>
                     <button
                         onClick={onClose}
                         className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"

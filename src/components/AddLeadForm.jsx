@@ -15,7 +15,7 @@ function AddLeadForm({ onAddLead }) {
         
         // create a new lead
         const newLead = {
-            id: Date.now(),    // Unique ID using timestamp
+          
             name: name,       
             email: email,  
             phone: phone,   

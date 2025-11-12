@@ -1,13 +1,18 @@
 {
   "name": "leasing-crm",
   "private": false,
-
   "type": "module",
   "version": "1.0.0",
   "description": "A modern CRM for apartment leasing professionals",
   "author": "Reece Resnik",
   "license": "MIT",
-  "keywords": ["react", "crm", "real-estate", "leasing", "property-management"],
+  "keywords": [
+    "react",
+    "crm",
+    "real-estate",
+    "leasing",
+    "property-management"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/yourusername/leasing-crm"
@@ -19,6 +24,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "firebase": "^12.5.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
