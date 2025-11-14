@@ -22,7 +22,7 @@ function LeadModal({ lead, isOpen, onClose, onSave, onDelete }) {
     if (!isOpen) return null;
 
     const handleSave = () => {
-        onSave(editedLead);  // Just pass the editedLead state
+        onSave(editedLead);  // Pass the editedLead state
         onClose();           // Close the modal after saving
     };
 
@@ -120,8 +120,9 @@ function LeadModal({ lead, isOpen, onClose, onSave, onDelete }) {
                         <input
                             type="number"
                             min="1"
-                            value={editedLead.occupants || 1}
-                            onChange={(e) => setEditedLead({ ...editedLead, occupants: parseInt(e.target.value) })}
+                            value={editedLead.occupants || ''}
+                            onChange={(e) => setEditedLead({ ...editedLead, occupants: e.target.value ? parseInt(e.target.value) : '' })}
+                            placeholder="1"
                             className="mt-1 w-full p-2 border rounded"
                         />
                     </div>
@@ -129,8 +130,9 @@ function LeadModal({ lead, isOpen, onClose, onSave, onDelete }) {
                         <label className="block text-sm font-medium text-gray-700">Pets</label>
                         <input
                             type="text"
-                            value={editedLead.pets || "None"}
+                            value={editedLead.pets || ''}
                             onChange={(e) => setEditedLead({ ...editedLead, pets: e.target.value })}
+                            placeholder="None"
                             className="mt-1 w-full p-2 border rounded"
                         />
                     </div>

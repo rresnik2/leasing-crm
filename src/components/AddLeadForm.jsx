@@ -37,8 +37,6 @@ function AddLeadForm({ onAddLead }) {
         setPhone('');
         setMoveInDate('');
         setUnitType('');
-
-
     };
 
     return (

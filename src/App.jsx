@@ -3,8 +3,8 @@ import LeadCard from './components/LeadCard';
 import AddLeadForm from './components/AddLeadForm';
 import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
 import { db } from './firebase';
-// import Dashboard from './components/Dashboard';
 import LeadModal from './components/LeadModal';
+// Uncomment the line below to seed the database ONCE
 // import { seedDatabase } from './seedDatabase';
 
 function App() {
@@ -23,99 +23,6 @@ function App() {
 
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // const [leads, setLeads] = useState(() => {
-  //   const savedLeads = localStorage.getItem('crmLeads');
-  //   if (savedLeads) {
-  //     return JSON.parse(savedLeads);
-  //   }
-  //   // Default leads if nothing in storage
-  //   return [
-  //     {
-  //       id: 1,
-  //       name: "Sarah Mitchell",
-  //       email: "sarah.mitchell@email.com",
-  //       phone: "(206) 555-1234",
-  //       status: "Tour Completed",
-  //       moveInDate: "2025-12-01",
-  //       unitType: "2 Bedroom"
-  //     },
-  //     {
-  //       id: 2,
-  //       name: "Marcus Chen",
-  //       email: "mchen92@email.com",
-  //       phone: "(425) 555-5678",
-  //       status: "Leased",
-  //       moveInDate: "2025-01-15",
-  //       unitType: "1 Bedroom"
-  //     },
-  //     {
-  //       id: 3,
-  //       name: "Jennifer Davis",
-  //       email: "jdavis.seattle@email.com",
-  //       phone: "(206) 555-9012",
-  //       status: "New Inquiry",
-  //       moveInDate: "2025-11-11",
-  //       unitType: "Studio"
-  //     }
-  //     ,
-  //     {
-  //       id: 4,
-  //       name: "Ken Doll",
-  //       email: "mymansion@email.com",
-  //       phone: "(425) 986-1238",
-  //       status: "Leased Elsewhere",
-  //       moveInDate: "2025-12-31",
-  //       unitType: "3 Bedroom"
-  //     },
-  //     {
-  //       id: 5,
-  //       name: "Ben Jamin",
-  //       email: "beninseattle@email.com",
-  //       phone: "(206) 555-0921",
-  //       status: "Search Hold",
-  //       moveInDate: "2026-05-01",
-  //       unitType: "Studio"
-  //     },
-
-  //     {
-  //       id: 8,
-  //       name: "Robert & Amy Johnson",
-  //       email: "johnson.family@email.com",
-  //       phone: "(425) 555-0154",
-  //       status: "Tour Completed",
-  //       moveInDate: "2025-03-01",
-  //       unitType: "3 Bedroom"
-  //     },
-  //     {
-  //       id: 9,
-  //       name: "Alex Rivera",
-  //       email: "arivera.seattle@gmail.com",
-  //       phone: "(206) 555-0121",
-  //       status: "New Inquiry",
-  //       moveInDate: "2025-02-15",
-  //       unitType: "1 Bedroom"
-  //     },
-  //     {
-  //       id: 6,
-  //       name: "David Park",
-  //       email: "dpark89@outlook.com",
-  //       phone: "(425) 555-0189",
-  //       status: "Contacted",
-  //       moveInDate: "2025-01-30",
-  //       unitType: "2 Bedroom"
-  //     },
-  //     {
-  //       id: 7,
-  //       name: "Lisa Thompson",
-  //       email: "lisa.thompson@uw.edu",
-  //       phone: "(206) 555-0167",
-  //       status: "Leased",
-  //       moveInDate: "2024-12-01",
-  //       unitType: "Studio"
-  //     }
-  //   ];
-  // });
 
   useEffect(() => {
     // Set up real-time listener
@@ -168,7 +75,7 @@ function App() {
       // Check if this is a numeric ID (invalid)
       if (typeof id === 'number') {
         console.log("Removing invalid lead with numeric ID from local state");
-        // Just remove from local state, don't try Firestore
+        //removes from local state, doesn't Firestore
         setLeads(leads.filter(lead => lead.id !== id));
         return;
       }
@@ -202,19 +109,19 @@ function App() {
     setIsModalOpen(true);
   }
   const handleModalSave = async (updatedLead) => {
-    console.log("Saving lead:", updatedLead);
+    // Debugging for updating lead
+    // console.log("Saving lead:", updatedLead);
     try {
       const { id, ...leadData } = updatedLead;
 
-      // Check if this is a valid Firestore ID (should be a string)
       if (!id || typeof id !== 'string') {
-        console.error("Invalid ID for modal save:", id);
+        // console.error("Invalid ID for modal save:", id);
         alert("Cannot save: This lead has an invalid ID. It may have been added incorrectly.");
         return;
       }
-
-      console.log("Updating document with ID:", id);
-      console.log("Data being saved:", leadData);
+      // Debugging for updating lead
+      // console.log("Updating document with ID:", id);
+      // console.log("Data being saved:", leadData);
 
       await updateDoc(doc(db, 'leads', id), leadData);
       setIsModalOpen(false);
@@ -229,6 +136,7 @@ function App() {
 
     <div className="min-h-screen bg-blue-100 p-8">
       <h1 className="text-3xl font-bold text-blue-600 mb-8 text-center">Leasing CRM </h1>
+      {/* // button for importing sample data to database */}
       {/* <div className="text-center mb-4">
         <button
           onClick={seedDatabase}

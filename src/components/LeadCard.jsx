@@ -156,44 +156,25 @@ function LeadCard({ lead, name, email, phone, status, moveInDate, unitType, onEd
         </span>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-        <div>
+        <div className='min-w-0'>
           <p className='text-green-800'>Email</p>
-          <p className='text-gray-900'>{email}</p>
+          <p className='text-gray-900 overflow-hidden'>{email}</p>
         </div>
-        <div>
+        <div className='min-w-0'>
           <p className='text-green-800'>Phone</p>
           <p className='text-gray-900'>{formatForDisplay(phone)}</p>
         </div>
-        <div>
+        <div className='min-w-0'>
           <p className='text-green-800'>Move-In Date</p>
           <p className='text-gray-900'>{moveInDate}</p>
         </div>
-        <div>
+        <div className='min-w-0'>
           <p className='text-green-800'>Unit Type</p>
           <p className='text-gray-900'>{unitType}</p>
         </div>
       </div>
 
       <div className="flex gap-2 mt-4">
-        {/* <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsEditing(true);
-          }}
-          className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-        >
-          Edit
-        </button> */}
-        {/* <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete();
-
-          }}
-          className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-        >
-          Delete
-        </button> */}
       </div>
 
     </div>
