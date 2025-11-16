@@ -1,6 +1,6 @@
 import { useState } from 'react';
-// import { formatPhoneNumber } from '../utils/formatters';
 import { formatForDisplay } from '../utils/phoneUtils';
+import LeadScoreBadge from '../components/LeadScoreBadge'
 
 function LeadCard({ lead, name, email, phone, status, moveInDate, unitType, onEdit, onCardClick }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -149,8 +149,9 @@ function LeadCard({ lead, name, email, phone, status, moveInDate, unitType, onEd
   // Normal display mode
   return (
     <div className="bg-white p-6 rounded-lg shadow-md" onClick={() => !isEditing && onCardClick(lead)}>
-      <div className='flex justify-between items-start mb-3'>
+      <div className='flex justify-between mb-3'>
         <h2 className="text-xl font-bold text-gray-800">{name}</h2>
+        <LeadScoreBadge lead={lead}></LeadScoreBadge>
         <span className={`px-2 py-1 rounded text-sm ${getStatusColor(status)}`}>
           {status}
         </span>

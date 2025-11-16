@@ -13,6 +13,8 @@ A modern CRM system built specifically for apartment leasing professionals, feat
 - **Data Persistence**: All data saved on a Firebase database
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 - **Real-time Updates**: Instant search and filter results as you type
+- **Lead Scoring Engine**: Rule-based priority scoring system that evaluates urgency, engagement, and demand factors
+- **Smart Recommendations**: Automated action suggestions based on lead score and status
 
 ## 🛠️ Built With
 
@@ -20,19 +22,25 @@ A modern CRM system built specifically for apartment leasing professionals, feat
 - **Vite** - Lightning-fast build tool and development server
 - **Tailwind CSS v3** - Utility-first CSS framework
 - **JavaScript ES6+** - Modern JavaScript features
+- **Python/FastAPI** - Backend API for lead scoring service
 - **Vercel** - Prototype deployment
 - **Firebase** - Server side data persistence
 
 ## 🤓 Knowledge Used So Far
 - CRUD Operations
-- React
-- GUIs
+- React (State Management, Hooks, Component Architecture)
+- REST API Integration
+- Python Backend Development (FastAPI)
+- Rule-based Scoring Algorithms
+- Cross-Origin Resource Sharing (CORS)
+- Asynchronous JavaScript (fetch, async/await)
 
 ## 💻 Getting Started
 
 ### Prerequisites
 - Node.js (v14 or higher)
 - npm or yarn
+- Python 3.11+ (for lead scoring backend)
 
 ### Installation
 
@@ -42,17 +50,33 @@ git clone https://github.com/rresnik2/leasing-crm.git
 cd leasing-crm
 ```
 
-2. Install dependencies
+2. Install frontend dependencies
 ```bash
 npm install
 ```
 
-3. Start the development server
+3. Set up the Python backend (optional - for lead scoring)
+```bash
+cd ml-backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+4. Start the backend server
+```bash
+cd ml-backend
+source venv/bin/activate
+python main.py
+```
+The API will run at [http://localhost:8000](http://localhost:8000)
+
+5. Start the frontend development server (in a new terminal)
 ```bash
 npm run dev
 ```
 
-4. Open [http://localhost:5173](http://localhost:5173) in your browser
+6. Open [http://localhost:5173](http://localhost:5173) in your browser
 
 ### Building for Production
 
@@ -101,7 +125,7 @@ The CRM tracks leads through these stages:
 - [ ] Email integration for automated follow-ups
 - [ ] Export leads to CSV/Excel
 - [ ] Calendar integration for tour scheduling
-- [\] Notes and communication history
+- [ ] Notes and communication history
 - [ ] Advanced reporting and metrics
 
 ## 🤝 Contributing
