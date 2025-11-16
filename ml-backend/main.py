@@ -5,11 +5,6 @@ from datetime import datetime, timedelta
 from typing import Optional, Dict, List
 import firebase_admin
 from firebase_admin import credentials, firestore
-import pandas as pd
-import numpy as np
-import joblib
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import StandardScaler
 import os
 from dotenv import load_dotenv
 import json
