@@ -3,6 +3,41 @@ node_modules/
 .pnp
 .pnp.js
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.venv/
+env.bak/
+venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
+*.egg-info/
+*.egg
+
+# ML/Data Science
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.hdf5
+*.model
+*.weights
+models/
+*.csv
+!**/test_*.csv
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Firebase credentials
+ml-backend/firebase-credentials.json
+
 # Testing
 coverage/
 

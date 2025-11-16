@@ -12,8 +12,10 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 import os
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
+
 
 # Initialize FastAPI
 app = FastAPI(title="Leasing CRM ML Service")
@@ -32,9 +34,18 @@ app.add_middleware(
 )
 
 # Initialize Firebase
-cred = credentials.Certificate("firebase-credentials.json")
+FIREBASE_CREDENTIALS = os.getenv('FIREBASE_CREDENTIALS')
+
+if FIREBASE_CREDENTIALS:
+    print("Using Firebase credentials from environment variable")
+    cred = credentials.Certificate(json.loads(FIREBASE_CREDENTIALS))
+else:
+    print("Using Firebase credentials from file")
+    cred = credentials.Certificate("firebase-credentials.json")
+
 firebase_admin.initialize_app(cred)
 db = firestore.client()
+
 
 # Pydantic models for request/response
 class LeadData(BaseModel):
