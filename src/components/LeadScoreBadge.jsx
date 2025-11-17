@@ -1,6 +1,9 @@
 // LeadScoreBadge.jsx
 import {useEffect, useState } from 'react';
 
+// Define this OUTSIDE the component - it never changes
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 function LeadScoreBadge({ lead }) {
   const [score, setScore] = useState(null);
   
@@ -8,7 +11,7 @@ function LeadScoreBadge({ lead }) {
   
   const fetchLeadScore = async (lead) => {
     try {
-      const response = await fetch('http://localhost:8000/api/score-lead', {
+      const response = await fetch(`${API_URL}/api/score-lead`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(lead)
