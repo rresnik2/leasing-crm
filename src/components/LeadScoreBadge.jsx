@@ -6,10 +6,12 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 function LeadScoreBadge({ lead }) {
   const [score, setScore] = useState(null);
+  const [loading, setLoading] = useState(false);
   
   useEffect(() => {fetchLeadScore(lead);}, [lead]);
   
   const fetchLeadScore = async (lead) => {
+    setLoading(true);
     try {
       const response = await fetch(`${API_URL}/api/score-lead`, {
         method: 'POST',
@@ -18,12 +20,15 @@ function LeadScoreBadge({ lead }) {
       });
       const data = await response.json();
       setScore(data);
+    
     } catch (error) {
       console.error('Error fetching lead score:', error);
     }
+    finally {
+      setLoading(false);
+    }
   };
   
-  if (!score) return null;
   
   const getScoreColor = (priority) => {
     switch(priority) {
@@ -33,6 +38,18 @@ function LeadScoreBadge({ lead }) {
       default: return 'bg-gray-300';
     }
   };
+  if (loading) {
+    return (
+      <div className="flex items-center gap-2">
+        <div className="bg-gray-300 text-white px-2 py-1 rounder text-xs animate-pulse">
+          Loading...
+        </div>
+      </div>
+    );
+  }
+  if (!score){
+    return null;
+  }
   
   return (
     <div className="flex items-center gap-2">
@@ -42,5 +59,6 @@ function LeadScoreBadge({ lead }) {
       <span className="text-xs text-gray-600">{score.recommended_action}</span>
     </div>
   );
+
 }
 export default LeadScoreBadge;

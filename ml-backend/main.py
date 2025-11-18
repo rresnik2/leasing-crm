@@ -107,8 +107,8 @@ def extract_features(lead: LeadData) -> Dict:
     # Unit type demand (2BR typically the highest demand)
     unit_demand = {
         'Studio': 0.7,
-        '1 Bedroom': 0.8,
-        '2 Bedroom': 0.9,
+        '1 Bedroom': 0.9,
+        '2 Bedroom': 0.8,
         '3 Bedroom': 0.6
     }
     features['unit_demand_factor'] = unit_demand.get(lead.unitType, 0.5)
