@@ -4,6 +4,7 @@ import AddLeadForm from './components/AddLeadForm';
 import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
 import { db } from './firebase';
 import LeadModal from './components/LeadModal';
+import ChatAssistant from './components/ChatAssistant';
 // Uncomment the line below to seed the database ONCE
 // import { seedDatabase } from './seedDatabase';
 
@@ -226,6 +227,7 @@ function App() {
           }}
         />
       )}
+      <ChatAssistant />
     </div>
 
   );
