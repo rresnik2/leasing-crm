@@ -95,6 +95,9 @@ The built files will be in the `dist` directory, ready for deployment.
 ### Edit Lead
 ![Edit Lead](./images/screenshot2.png)
 
+## Security Note
+This demo uses open Firestore rules for ease of demonstration. In a production environment, I would implement Firebase Authentication with role-based access controls, or route all data access through the backend API with proper authorization. 
+
 ## 🎯 Use Cases
 
 This CRM is designed for:
@@ -121,12 +124,11 @@ The CRM tracks leads through these stages:
 
 - [ ] Dashboard with conversion analytics
 - [X] Backend API integration (Firebase)
-- [ ] User authentication and multi-user support
 - [ ] Email integration for automated follow-ups
 - [ ] Export leads to CSV/Excel
 - [ ] Calendar integration for tour scheduling
-- [ ] Notes and communication history
-- [ ] Advanced reporting and metrics
+- [X] Notes and communication history
+- [X] Advanced reporting and metrics
 
 ## 🤝 Contributing
 
