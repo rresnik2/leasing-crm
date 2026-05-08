@@ -138,14 +138,14 @@ function App() {
     <div className="min-h-screen bg-blue-100 p-8">
       <h1 className="text-3xl font-bold text-blue-600 mb-8 text-center">Leasing CRM </h1>
       {/* // button for importing sample data to database */}
-      {/* <div className="text-center mb-4">
+      {/*<div className="text-center mb-4">
         <button
           onClick={seedDatabase}
           className="bg-green-500 text-white px-4 py-2 rounded"
         >
           Seed Database (Dev Only)
         </button>
-      </div> */}
+      </div>*/}
 
       <div className="max-w-4xl mx-auto space-y-4">
         {/* Search and Filter Bar */}

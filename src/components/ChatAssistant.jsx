@@ -1,9 +1,15 @@
 import { useState } from 'react';
 
+// Leasing CRM assistant
 export default function ChatAssistant() {
+
+  // tracking open state
   const [isOpen, setIsOpen] = useState(false);
+  // message thread
   const [messages, setMessages] = useState([]);
+  // input for user
   const [input, setInput] = useState('');
+  // for loading state
   const [loading, setLoading] = useState(false);
 
   const handleSend = async () => {

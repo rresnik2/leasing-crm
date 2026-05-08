@@ -1,15 +1,23 @@
+// 
+// 
+// 
 // LeadScoreBadge.jsx
 import {useEffect, useState } from 'react';
 
-// Define this OUTSIDE the component - it never changes
+// Retrieves url or defaults to local dev
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 function LeadScoreBadge({ lead }) {
+
+  // tracking score
   const [score, setScore] = useState(null);
+  // for loading state
   const [loading, setLoading] = useState(false);
   
+
   useEffect(() => {fetchLeadScore(lead);}, [lead]);
   
+  // gets lead score with await fetch call
   const fetchLeadScore = async (lead) => {
     setLoading(true);
     try {
