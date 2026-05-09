@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { queryLeads, Message } from '../models/aiQuery';
 
 // Leasing CRM assistant
 export default function ChatAssistant() {
@@ -6,7 +7,7 @@ export default function ChatAssistant() {
   // tracking open state
   const [isOpen, setIsOpen] = useState(false);
   // message thread
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   // input for user
   const [input, setInput] = useState('');
   // for loading state
@@ -15,40 +16,18 @@ export default function ChatAssistant() {
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    // Add user message
-    const userMessage = { role: 'user', content: input };
+    const userMessage: Message = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
-    const question = input; 
+    const question = input;
     setInput('');
     setLoading(true);
 
     try {
-
-      const response = await fetch('https://leasing-ai-assistant.rresnik2.workers.dev/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          question,
-          conversationHistory: messages 
-        }),
-      });
-
-      const data = await response.json();
-
-      const aiMessage = {
-        role: 'assistant',
-        content: data.answer || 'Sorry, I encountered an error.'
-      };
-      setMessages(prev => [...prev, aiMessage]);
+      const answer = await queryLeads(question, [...messages, userMessage]);
+      setMessages(prev => [...prev, { role: 'assistant', content: answer }]);
     } catch (error) {
       console.error('Error:', error);
-      const errorMessage = { 
-      role: 'assistant', 
-      content: 'Sorry, I could not process your request.' 
-    };
-    setMessages(prev => [...prev, errorMessage]);
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I could not process your request.' }]);
     } finally {
       setLoading(false);
     }
