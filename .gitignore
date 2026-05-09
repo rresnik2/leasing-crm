@@ -28,7 +28,6 @@ pip-delete-this-directory.txt
 *.hdf5
 *.model
 *.weights
-models/
 *.csv
 !**/test_*.csv
 
@@ -36,7 +35,7 @@ models/
 .ipynb_checkpoints
 
 # Firebase credentials
-ml-backend/firebase-credentials.json
+lead-score/firebase-credentials.json
 
 # Testing
 coverage/
