@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { queryLeads, Message } from '../models/aiQuery';
+import { queryLeads, Message } from '../models/aiQuery.ts';
 
 // Leasing CRM assistant
 export default function ChatAssistant() {
