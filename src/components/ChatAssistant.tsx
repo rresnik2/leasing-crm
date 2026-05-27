@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { queryLeads, Message } from '../models/aiQuery.ts';
+import { query, Message } from '../models/aiQuery.ts';
 
 // Leasing CRM assistant
 export default function ChatAssistant() {
@@ -16,14 +16,15 @@ export default function ChatAssistant() {
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    const userMessage: Message = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMessage]);
     const question = input;
+    const userMessage: Message = { role: 'user', content: question };
+    const nextMessages = [...messages, userMessage];
+    setMessages(nextMessages);
     setInput('');
     setLoading(true);
 
     try {
-      const answer = await queryLeads(question, [...messages, userMessage]);
+      const answer = await query(question, messages);
       setMessages(prev => [...prev, { role: 'assistant', content: answer }]);
     } catch (error) {
       console.error('Error:', error);

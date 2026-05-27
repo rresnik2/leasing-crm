@@ -2,14 +2,17 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from datetime import datetime, timedelta
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Literal
 import firebase_admin
 from firebase_admin import credentials, firestore
 import os
 from dotenv import load_dotenv
 import json
+from anthropic import Anthropic
 
 load_dotenv()
+
+anthropic_client = Anthropic()
 
 
 # Initialize FastAPI
@@ -314,6 +317,64 @@ async def bulk_score_leads(leads: List[LeadData]):
         "medium_priority_count": len([s for s in scores if s.priority == "Medium"]),
         "low_priority_count": len([s for s in scores if s.priority == "Low"])
     }
+
+
+class ChatMessage(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str
+
+
+class AIQueryRequest(BaseModel):
+    question: str
+    history: List[ChatMessage] = []
+
+
+class AIQueryResponse(BaseModel):
+    answer: str
+
+
+SYSTEM_PROMPT = (
+    "You are an assistant for a leasing agent. You answer questions about the "
+    "prospects in the database provided in each user message. When listing "
+    "prospects, use the actual name field, not the row index. Use the notes "
+    "field for additional context. If the answer is not in the data, say "
+    "\"I don't have that information\"."
+)
+
+
+@app.post("/api/ai-query", response_model=AIQueryResponse)
+async def ai_query(req: AIQueryRequest):
+    """Answer a leasing agent's natural-language question about current leads."""
+    try:
+        leads_snapshot = db.collection("leads").stream()
+        leads = [doc.to_dict() for doc in leads_snapshot]
+
+        leads_description = "\n".join(
+            f"[{i + 1}] " + ", ".join(f"{k}={v}" for k, v in lead.items())
+            for i, lead in enumerate(leads)
+        )
+
+        prompt = f"Database records:\n{leads_description}\n\nQuestion: {req.question}"
+
+        messages = [{"role": m.role, "content": m.content} for m in req.history]
+        messages.append({"role": "user", "content": prompt})
+
+        response = anthropic_client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=1000,
+            temperature=0.3,
+            system=SYSTEM_PROMPT,
+            messages=messages,
+        )
+
+        answer = "".join(
+            block.text for block in response.content if block.type == "text"
+        )
+        return AIQueryResponse(answer=answer)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 if __name__ == "__main__":
     import uvicorn
