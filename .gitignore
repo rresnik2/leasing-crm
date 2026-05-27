@@ -46,6 +46,7 @@ dist/
 
 # Environment variables
 .env
+lead-score/.env.bak
 .env.local
 .env.development.local
 .env.test.local
