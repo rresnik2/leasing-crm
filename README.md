@@ -10,11 +10,12 @@ A modern CRM system built specifically for apartment leasing professionals, feat
 - **Status Tracking**: Monitor leads through the leasing pipeline (New Inquiry → Tour → Application → Leased)
 - **Search & Filter**: Find leads quickly by name, email, or status
 - **Smart Sorting**: Organize leads by name or status
-- **Data Persistence**: All data saved on a Firebase database
+- **Data Persistence**: All data saved in a Firebase database
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 - **Real-time Updates**: Instant search and filter results as you type
 - **Lead Scoring Engine**: Rule-based priority scoring system that evaluates urgency, engagement, and demand factors
 - **Smart Recommendations**: Automated action suggestions based on lead score and status
+- **gAI Database Assistant**: Integrated Claude Sonnet 4.6 model to query the database and provide recommendations and insights
 
 ## 🛠️ Built With
 
@@ -22,9 +23,8 @@ A modern CRM system built specifically for apartment leasing professionals, feat
 - **Vite** - Lightning-fast build tool and development server
 - **Tailwind CSS v3** - Utility-first CSS framework
 - **JavaScript ES6+** - Modern JavaScript features
-- **Python/FastAPI** - Backend API for lead scoring service
 - **Vercel** - Prototype deployment
-- **Firebase** - Server side data persistence
+- **Firebase/Python** - Server-side data persistence, Backend API for lead scoring service and gAI model.
 
 ## 🤓 Knowledge Used So Far
 - CRUD Operations
@@ -40,7 +40,7 @@ A modern CRM system built specifically for apartment leasing professionals, feat
 ### Prerequisites
 - Node.js (v14 or higher)
 - npm or yarn
-- Python 3.11+ (for lead scoring backend)
+- Python 3.11+ (for lead scoring backend and gAI model)
 
 ### Installation
 
