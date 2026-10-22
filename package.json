@@ -23,7 +23,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "seed:demo": "node scripts/seed-demo-data.js"
   },
   "dependencies": {
     "awesome-phonenumber": "^7.6.0",

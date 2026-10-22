@@ -40,6 +40,9 @@ lead-score/firebase-credentials.json
 # Testing
 coverage/
 
+# Firestore backups written by scripts/seed-demo-data.js
+backups/
+
 # Production
 build/
 dist/
