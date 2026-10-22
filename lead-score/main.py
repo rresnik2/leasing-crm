@@ -77,6 +77,9 @@ class FollowUpRecommendation(BaseModel):
     recommended_method: str
     urgency_level: str
 
+# Statuses where the lead is done: no score or next step is given
+FINISHED_STATUSES = {'Leased', 'Leased Elsewhere', 'Not Interested'}
+
 # Feature engineering functions
 def extract_features(lead: LeadData) -> Dict:
     """Extract ML features from lead data"""
@@ -131,8 +134,18 @@ async def score_lead(lead: LeadData):
     Returns score 0-100 with priority and recommendations
     """
     try:
+        # Finished leads have nothing left to follow up on
+        if lead.status in FINISHED_STATUSES:
+            return LeadScore(
+                lead_id=lead.id,
+                score=0,
+                priority="Closed",
+                recommended_action="",
+                factors={}
+            )
+
         features = extract_features(lead)
-        
+
         # Calculate composite score
         score_components = {
             'urgency': features['urgency_score'] * 0.35,
@@ -163,7 +176,9 @@ async def score_lead(lead: LeadData):
             action = "📝 Send application link with fee waiver (limited time)"
         elif lead.status == 'Application Submitted':
             action = "⚡ Fast-track application review - high conversion probability"
-        
+        elif lead.status == 'Search Hold':
+            action = "📧 Check in monthly until their search resumes"
+
         return LeadScore(
             lead_id=lead.id,
             score=total_score,
@@ -363,7 +378,7 @@ async def ai_query(req: AIQueryRequest):
 
         response = anthropic_client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=100,
+            max_tokens=4096,
             temperature=0.3,
             system=SYSTEM_PROMPT,
             messages=messages,

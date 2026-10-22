@@ -1,5 +1,5 @@
 // Single source for lead field options. Previously duplicated in
-// LeadCard, LeadModal and AddLeadForm.
+// LeadCard, LeadModal and AddLeadModal.
 
 // Ordered stages of the leasing pipeline, used by PipelineProgress.
 export const PIPELINE_STAGES = [
@@ -20,6 +20,9 @@ export const CLOSED_STATUSES = [
 ];
 
 export const LEAD_STATUSES = [...PIPELINE_STAGES, ...CLOSED_STATUSES];
+
+// Statuses with nothing left to do: no score or next step is shown.
+export const FINISHED_STATUSES = ["Leased", "Not Interested", "Leased Elsewhere"];
 
 export const UNIT_TYPES = ["Studio", "1 Bedroom", "2 Bedroom", "3 Bedroom"];
 
@@ -47,8 +50,9 @@ export const STATUS_TONES = {
 };
 
 // Badge tone for each lead-score priority returned by the scoring API.
+// High is brand, not danger: red already means Leased Elsewhere and Delete.
 export const PRIORITY_TONES = {
-  High: "danger",
+  High: "brand",
   Medium: "warning",
   Low: "neutral",
 };

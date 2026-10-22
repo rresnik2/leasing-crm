@@ -1,6 +1,6 @@
 // LeadScoreBadge.jsx
 import {useEffect, useState } from 'react';
-import { PRIORITY_TONES } from '../constants/leadOptions';
+import { FINISHED_STATUSES, PRIORITY_TONES } from '../constants/leadOptions';
 import Badge from './ui/Badge';
 import Skeleton from './ui/Skeleton';
 
@@ -15,7 +15,16 @@ function LeadScoreBadge({ lead }) {
   const [loading, setLoading] = useState(false);
 
 
-  useEffect(() => {fetchLeadScore(lead);}, [lead]);
+  // finished leads have no next step, so skip the request
+  const isFinished = FINISHED_STATUSES.includes(lead.status);
+
+  useEffect(() => {
+    if (isFinished) {
+      setScore(null);
+      return;
+    }
+    fetchLeadScore(lead);
+  }, [lead, isFinished]);
 
   // gets lead score with await fetch call
   const fetchLeadScore = async (lead) => {

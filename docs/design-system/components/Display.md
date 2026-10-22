@@ -35,10 +35,10 @@ Unknown tones fall back to `neutral`.
 | Tone | Badge classes | Dot | Use when |
 |---|---|---|---|
 | `neutral` | `bg-surface-muted text-fg-muted ring-1 ring-inset ring-line` | `bg-fg-subtle` | Default, inactive, or low-priority information |
-| `brand` | `bg-brand-subtle text-brand-strong` | `bg-brand` | Selected, informational, or "new" |
+| `brand` | `bg-brand-subtle text-brand-strong` | `bg-brand` | Selected, informational, "new", or high priority |
 | `success` | `bg-success-subtle text-success-strong` | `bg-success` | Confirmed, complete |
 | `warning` | `bg-warning-subtle text-warning-strong` | `bg-warning` | Needs attention |
-| `danger` | `bg-danger-subtle text-danger-strong` | `bg-danger` | Error, urgent, high priority |
+| `danger` | `bg-danger-subtle text-danger-strong` | `bg-danger` | Errors and destructive actions |
 | `blue` | `bg-blue-100 text-blue-800` | `bg-blue-500` | Categorical (lead status) |
 | `yellow` | `bg-yellow-100 text-yellow-800` | `bg-yellow-500` | Categorical (lead status) |
 | `purple` | `bg-purple-100 text-purple-800` | `bg-purple-500` | Categorical (lead status) |
@@ -79,7 +79,7 @@ for status colors; change a color there, not in a component.
 
 Any status not in the map renders as `neutral`.
 
-Priority badges (lead score) use `PRIORITY_TONES` the same way: `High` → `danger`, `Medium` → `warning`, `Low` → `neutral`.
+Priority badges (lead score) use `PRIORITY_TONES` the same way: `High` → `brand`, `Medium` → `warning`, `Low` → `neutral`. High is not `danger`: red already means Leased Elsewhere and destructive actions, so hot leads would read as errors.
 
 ## Props
 
@@ -187,7 +187,7 @@ import Button from './components/ui/Button';
     <h2 className="text-title text-fg">{lead.name}</h2>
     <StatusBadge status={lead.status} />
   </div>
-  <Badge tone="danger" size="sm" dot className="mt-2">High priority</Badge>
+  <Badge tone="brand" size="sm" dot className="mt-2">High priority</Badge>
 </Card>
 
 // Empty list

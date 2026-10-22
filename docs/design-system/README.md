@@ -235,7 +235,7 @@ excluded from production builds).
 
 ## Open questions
 
-- **Similar reds.** `red` (Leased Elsewhere), `rose` (Search Hold) and `danger` (High priority score)
+- **Similar reds.** `red` (Leased Elsewhere) and `rose` (Search Hold)
   are hard to tell apart side by side. Consider moving Search Hold to `warning` or a neutral tone.
 - **Dark mode.** Tokens are CSS variables, so a `prefers-color-scheme: dark` block in
   `src/index.css` is all a dark theme needs — except the categorical Badge hues, which use raw

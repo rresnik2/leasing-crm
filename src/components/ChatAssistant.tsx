@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import Markdown, { type Components } from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { query, Message } from '../models/aiQuery.ts';
 import Button from './ui/Button';
 import IconButton from './ui/IconButton';
@@ -11,6 +13,34 @@ const SUGGESTIONS = [
   'Show me all approved applications',
   'Which leads need follow-up?',
 ];
+
+// markdown styling for assistant replies; headings render as bold lines so
+// replies don't add to the page's heading outline
+const heading: Components['h1'] = ({ children }) => <p className="text-label text-fg">{children}</p>;
+
+const MARKDOWN_COMPONENTS: Components = {
+  h1: heading,
+  h2: heading,
+  h3: heading,
+  h4: heading,
+  ul: ({ children }) => <ul className="list-disc space-y-1 pl-5">{children}</ul>,
+  ol: ({ children }) => <ol className="list-decimal space-y-1 pl-5">{children}</ol>,
+  strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+  a: ({ href, children }) => (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="rounded-sm text-brand underline focus-ring">
+      {children}
+    </a>
+  ),
+  code: ({ children }) => <code className="rounded-sm bg-surface px-1 font-mono text-caption">{children}</code>,
+  hr: () => <hr className="border-line" />,
+  table: ({ children }) => (
+    <div className="overflow-x-auto">
+      <table className="text-caption">{children}</table>
+    </div>
+  ),
+  th: ({ children }) => <th className="border border-line px-2 py-1 text-left font-semibold">{children}</th>,
+  td: ({ children }) => <td className="border border-line px-2 py-1">{children}</td>,
+};
 
 // Leasing CRM assistant
 export default function ChatAssistant() {
@@ -146,12 +176,18 @@ export default function ChatAssistant() {
               messages.map((msg, index) => (
                 <div
                   key={index}
-                  className={`w-fit max-w-[80%] rounded-card px-3 py-2 text-body whitespace-pre-wrap break-words ${msg.role === 'user'
-                      ? 'ml-auto rounded-br-sm bg-brand text-fg-inverse'
-                      : 'mr-auto rounded-bl-sm bg-surface-muted text-fg'
+                  className={`w-fit max-w-[80%] rounded-card px-3 py-2 text-body break-words ${msg.role === 'user'
+                      ? 'ml-auto rounded-br-sm bg-brand text-fg-inverse whitespace-pre-wrap'
+                      : 'mr-auto rounded-bl-sm bg-surface-muted text-fg space-y-2'
                     }`}
                 >
-                  {msg.content}
+                  {msg.role === 'user' ? (
+                    msg.content
+                  ) : (
+                    <Markdown remarkPlugins={[remarkGfm]} components={MARKDOWN_COMPONENTS}>
+                      {msg.content}
+                    </Markdown>
+                  )}
                 </div>
               ))
             )}

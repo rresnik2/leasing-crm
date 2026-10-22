@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import LeadCard from './components/LeadCard';
-import AddLeadForm from './components/AddLeadForm';
+import AddLeadModal from './components/AddLeadModal';
 import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
 import { db } from './firebase';
 import LeadModal from './components/LeadModal';
@@ -25,6 +25,14 @@ function SearchIcon() {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
       <circle cx="11" cy="11" r="7" />
       <path d="m20 20-3.5-3.5" />
+    </svg>
+  );
+}
+
+function PlusIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+      <path d="M12 5v14M5 12h14" />
     </svg>
   );
 }
@@ -82,6 +90,7 @@ function App() {
   const [sortBy, setSortBy] = useState('name');
   const [selectedLead, setSelectedLead] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState(false);
 
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -123,14 +132,16 @@ function App() {
       return 0;
     });
 
+  // returns whether the lead was saved; AddLeadModal shows the error inline
   const handleAddLead = async (newLead) => {
     try {
       await addDoc(collection(db, 'leads'), newLead);
       // The onSnapshot listener will automatically update the state
       toast({ tone: 'success', title: 'Lead added', description: newLead.name });
+      return true;
     } catch (error) {
       console.error("Error adding lead: ", error);
-      toast({ tone: 'danger', title: "Couldn't add lead", description: 'Check your connection and try again.' });
+      return false;
     }
   };
 
@@ -208,9 +219,14 @@ function App() {
 
     <div className="min-h-screen">
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
-        <header className="mb-8">
-          <h1 className="text-display text-fg">Leasing CRM</h1>
-          <p className="mt-1 text-body text-fg-muted">Track prospects from first inquiry to signed lease.</p>
+        <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h1 className="text-display text-fg">Leasing CRM</h1>
+            <p className="mt-1 text-body text-fg-muted">Track prospects from first inquiry to signed lease.</p>
+          </div>
+          <Button leadingIcon={<PlusIcon />} onClick={() => setIsAddOpen(true)}>
+            Add lead
+          </Button>
         </header>
         {/* // button for importing sample data to database */}
         {/*<div className="text-center mb-4">
@@ -261,7 +277,6 @@ function App() {
               Showing {filteredAndSortedLeads.length} of {leads.length} leads
             </div>
           </Card>
-          <AddLeadForm onAddLead={handleAddLead} />
           {loading ? (
             <div role="status" className="space-y-4">
               <span className="sr-only">Loading leads…</span>
@@ -274,7 +289,12 @@ function App() {
               <EmptyState
                 icon={<UsersIcon />}
                 title="No leads yet"
-                description="Add your first lead with the form above."
+                description="Add your first lead to start tracking it."
+                action={
+                  <Button leadingIcon={<PlusIcon />} onClick={() => setIsAddOpen(true)}>
+                    Add lead
+                  </Button>
+                }
               />
             </Card>
           ) : filteredAndSortedLeads.length === 0 ? (
@@ -338,6 +358,12 @@ function App() {
             handleDeleteLead(selectedLead.id);
             setIsModalOpen(false);
           }}
+        />
+      )}
+      {isAddOpen && (
+        <AddLeadModal
+          onClose={() => setIsAddOpen(false)}
+          onAddLead={handleAddLead}
         />
       )}
       <ChatAssistant />
