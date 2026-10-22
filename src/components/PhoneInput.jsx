@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { formatPhoneInput, validatePhone, getE164Format } from '../utils/phoneUtils';
-
-
+import Input from './ui/Input';
 
 function PhoneInput({
     value,
     onChange,
     placeholder = "(XXX) XXX-XXXX",
-    required = false,
-    className = "w-full p-2 border rounded",
-    countryCode = 'US'
+    countryCode = 'US',
+    onFocus,
+    onBlur,
+    ...rest
 }) {
     const [displayValue, setDisplayValue] = useState('');
     const [isValid, setIsValid] = useState(true);
@@ -39,32 +39,34 @@ function PhoneInput({
         onChange({ target: { value: valid ? e164 : formatted } });
     };
 
-    const handleBlur = () => {
+    const handleFocus = (e) => {
+        setIsFocused(true);
+        onFocus?.(e);
+    };
+
+    const handleBlur = (e) => {
         setIsFocused(false);
         // Final validation on blur
         if (displayValue) {
             const valid = validatePhone(displayValue, countryCode);
             setIsValid(valid);
         }
+        onBlur?.(e);
     };
 
     return (
-        <div className="relative">
-            <input
-                type="tel"
-                value={displayValue}
-                onChange={handleChange}
-                onFocus={() => setIsFocused(true)}
-                onBlur={handleBlur}
-                placeholder={placeholder}
-                className={`${className} ${!isValid && !isFocused && displayValue ? 'border-red-500' : ''}`}
-                required={required}
-                autoComplete="tel"
-            />
-            {!isValid && !isFocused && displayValue && (
-                <p className="text-red-500 text-xs mt-1">Please enter a valid phone number</p>
-            )}
-        </div>
+        <Input
+            {...rest}
+            type="tel"
+            value={displayValue}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            placeholder={placeholder}
+            error={!isValid && !isFocused && displayValue ? 'Please enter a valid phone number' : undefined}
+            autoComplete="tel"
+            inputMode="tel"
+        />
     );
 }
 

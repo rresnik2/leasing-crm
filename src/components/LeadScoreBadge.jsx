@@ -1,8 +1,8 @@
-// 
-// 
-// 
 // LeadScoreBadge.jsx
 import {useEffect, useState } from 'react';
+import { FINISHED_STATUSES, PRIORITY_TONES } from '../constants/leadOptions';
+import Badge from './ui/Badge';
+import Skeleton from './ui/Skeleton';
 
 // Retrieves url or defaults to local dev
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
@@ -13,10 +13,19 @@ function LeadScoreBadge({ lead }) {
   const [score, setScore] = useState(null);
   // for loading state
   const [loading, setLoading] = useState(false);
-  
 
-  useEffect(() => {fetchLeadScore(lead);}, [lead]);
-  
+
+  // finished leads have no next step, so skip the request
+  const isFinished = FINISHED_STATUSES.includes(lead.status);
+
+  useEffect(() => {
+    if (isFinished) {
+      setScore(null);
+      return;
+    }
+    fetchLeadScore(lead);
+  }, [lead, isFinished]);
+
   // gets lead score with await fetch call
   const fetchLeadScore = async (lead) => {
     setLoading(true);
@@ -28,7 +37,7 @@ function LeadScoreBadge({ lead }) {
       });
       const data = await response.json();
       setScore(data);
-    
+
     } catch (error) {
       console.error('Error fetching lead score:', error);
     }
@@ -36,35 +45,19 @@ function LeadScoreBadge({ lead }) {
       setLoading(false);
     }
   };
-  
-  
-  const getScoreColor = (priority) => {
-    switch(priority) {
-      case 'High': return 'bg-red-500';
-      case 'Medium': return 'bg-yellow-500';
-      case 'Low': return 'bg-gray-400';
-      default: return 'bg-gray-300';
-    }
-  };
+
+
   if (loading) {
-    return (
-      <div className="flex items-center gap-2">
-        <div className="bg-gray-300 text-white px-2 py-1 rounder text-xs animate-pulse">
-          Loading...
-        </div>
-      </div>
-    );
+    return <Skeleton className="h-5 w-24 !rounded-full" />;
   }
   if (!score){
     return null;
   }
-  
+
   return (
-    <div className="flex items-center gap-2">
-      <div className={`${getScoreColor(score.priority)} text-white px-2 py-1 rounded text-xs`}>
-        Score: {score.score}
-      </div>
-      <span className="text-xs text-gray-600">{score.recommended_action}</span>
+    <div className="flex flex-wrap items-center gap-2">
+      <Badge tone={PRIORITY_TONES[score.priority] ?? 'neutral'} size="sm">Score {score.score}</Badge>
+      <span className="text-caption text-fg-muted">{score.recommended_action}</span>
     </div>
   );
 
