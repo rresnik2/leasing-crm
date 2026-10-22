@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatDate } from '../utils/dateUtils';
 import { formatForDisplay } from '../utils/phoneUtils';
 import { LEAD_STATUSES, UNIT_TYPES } from '../constants/leadOptions';
 import LeadScoreBadge from './LeadScoreBadge';
@@ -12,7 +13,7 @@ import StatusBadge from './ui/StatusBadge';
 // shown in place of empty detail values
 const emptyValue = <span className="text-fg-subtle">—</span>;
 
-function LeadCard({ lead, name, email, phone, status, moveInDate, unitType, onEdit, onCardClick }) {
+function LeadCard({ lead, name, email, phone, status, moveInDate, unitType, score, onEdit, onCardClick }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editStatus, setEditStatus] = useState(status);
   const [editName, setEditName] = useState(name);
@@ -120,7 +121,7 @@ function LeadCard({ lead, name, email, phone, status, moveInDate, unitType, onEd
         <div className="min-w-0">
           <h2 className="text-title text-fg truncate">{name}</h2>
           <div className="mt-1">
-            <LeadScoreBadge lead={lead} />
+            <LeadScoreBadge score={score} />
           </div>
         </div>
         <StatusBadge status={status} className="shrink-0" />
@@ -139,7 +140,7 @@ function LeadCard({ lead, name, email, phone, status, moveInDate, unitType, onEd
         </div>
         <div className="min-w-0">
           <dt className="text-caption text-fg-subtle">Move-in date</dt>
-          <dd className="text-body text-fg truncate">{moveInDate || emptyValue}</dd>
+          <dd className="text-body text-fg truncate">{formatDate(moveInDate) || emptyValue}</dd>
         </div>
         <div className="min-w-0">
           <dt className="text-caption text-fg-subtle">Unit type</dt>
