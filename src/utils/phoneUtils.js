@@ -76,7 +76,8 @@ export const getSuggestedFormats = (value) => {
   if (usPhone.possibility !== 'invalid') {
     suggestions.push({
       country: 'US',
-      formatted: usPhone.number.national || value,
+      // number is undefined for empty or too-short input
+      formatted: usPhone.number?.national || value,
       valid: usPhone.valid
     });
   }
@@ -88,7 +89,7 @@ export const getSuggestedFormats = (value) => {
     if (intlPhone.possibility !== 'invalid') {
       suggestions.push({
         country: intlPhone.regionCode,
-        formatted: intlPhone.number.international,
+        formatted: intlPhone.number?.international || value,
         valid: intlPhone.valid
       });
     }
