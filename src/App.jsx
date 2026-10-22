@@ -12,13 +12,23 @@ import Input from './components/ui/Input';
 import Select from './components/ui/Select';
 import Skeleton from './components/ui/Skeleton';
 import { useToast } from './components/ui/useToast';
+import { FINISHED_STATUSES, LEAD_STATUSES } from './constants/leadOptions';
+import useLeadScores from './hooks/useLeadScores';
 // Uncomment the line below to seed the database ONCE
 // import { seedDatabase } from './seedDatabase';
 
 const SORT_OPTIONS = [
-  { value: 'name', label: 'Sort by Name' },
-  { value: 'status', label: 'Sort by Status' },
+  { value: 'name', label: 'Sort by name' },
+  { value: 'status', label: 'Sort by status' },
+  { value: 'score', label: 'Sort by score' },
+  { value: 'moveInDate', label: 'Sort by move-in date' },
 ];
+
+// position in the pipeline; statuses not in LEAD_STATUSES go last
+const statusRank = (status) => {
+  const index = LEAD_STATUSES.indexOf(status);
+  return index === -1 ? LEAD_STATUSES.length : index;
+};
 
 function SearchIcon() {
   return (
@@ -109,7 +119,27 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  const uniqueStatuses = ['All', ...new Set(leads.map(lead => lead.status))];
+  const scores = useLeadScores(leads);
+
+  // every status in pipeline order, then any unknown ones found in the data
+  const statusCounts = leads.reduce((counts, lead) => {
+    counts[lead.status] = (counts[lead.status] || 0) + 1;
+    return counts;
+  }, {});
+  const filterStatuses = [
+    'All',
+    ...LEAD_STATUSES,
+    ...Object.keys(statusCounts).filter(status => status && !LEAD_STATUSES.includes(status)),
+  ];
+  const statusOptions = filterStatuses.map(status => {
+    const label = status === 'All' ? 'All statuses' : status;
+    const count = status === 'All' ? leads.length : statusCounts[status] || 0;
+    // counts would all read 0 until leads arrive
+    return { value: status, label: loading ? label : `${label} (${count})` };
+  });
+
+  // highest first; finished and unscored leads go last
+  const scoreOf = (lead) => scores[lead.id]?.data?.score ?? -1;
 
   // Filter leads based on search term and status, then sort
   const filteredAndSortedLeads = leads
@@ -123,13 +153,21 @@ function App() {
       return matchesSearch && matchesStatus;
     })
     .sort((a, b) => {
-      // Sort alphabetically by name or status
-      if (sortBy === 'name') {
-        return a.name.localeCompare(b.name);
-      } else if (sortBy === 'status') {
-        return a.status.localeCompare(b.status);
+      // ties fall back to name order
+      const byName = a.name.localeCompare(b.name);
+      if (sortBy === 'status') {
+        return statusRank(a.status) - statusRank(b.status) || byName;
+      } else if (sortBy === 'score') {
+        return scoreOf(b) - scoreOf(a) || byName;
+      } else if (sortBy === 'moveInDate') {
+        // soonest first; finished leads and blank dates go last.
+        // YYYY-MM-DD strings sort as dates.
+        const aFinished = FINISHED_STATUSES.includes(a.status);
+        if (aFinished !== FINISHED_STATUSES.includes(b.status)) return aFinished ? 1 : -1;
+        if (!a.moveInDate !== !b.moveInDate) return a.moveInDate ? -1 : 1;
+        return (a.moveInDate || '').localeCompare(b.moveInDate || '') || byName;
       }
-      return 0;
+      return byName;
     });
 
   // returns whether the lead was saved; AddLeadModal shows the error inline
@@ -257,10 +295,7 @@ function App() {
                 aria-label="Filter by status"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                options={uniqueStatuses.map(status => ({
-                  value: status,
-                  label: status === 'All' ? 'All statuses' : status,
-                }))}
+                options={statusOptions}
               />
 
               {/* Sort Dropdown */}
@@ -274,7 +309,9 @@ function App() {
 
             {/* Results count */}
             <div className="mt-3 text-caption text-fg-muted" aria-live="polite">
-              Showing {filteredAndSortedLeads.length} of {leads.length} leads
+              {loading
+                ? 'Loading leads…'
+                : `Showing ${filteredAndSortedLeads.length} of ${leads.length} leads`}
             </div>
           </Card>
           {loading ? (
@@ -328,6 +365,7 @@ function App() {
                   status={lead.status}
                   moveInDate={lead.moveInDate}
                   unitType={lead.unitType}
+                  score={scores[lead.id]}
                   onDelete={() => handleDeleteLead(lead.id)}
                   onEdit={(updatedData) => handleEditLead(lead.id, updatedData)}
                   onCardClick={handleCardClick} />))}
