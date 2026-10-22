@@ -371,23 +371,37 @@ async def ai_query(req: AIQueryRequest):
             for i, lead in enumerate(leads)
         )
 
-        prompt = f"Database records:\n{leads_description}\n\nQuestion: {req.question}"
+        # today's date lets the model answer "this week" questions from the record dates
+        prompt = (
+            f"Today's date is {datetime.now():%A, %B %d, %Y}.\n\n"
+            f"Database records:\n{leads_description}\n\nQuestion: {req.question}"
+        )
 
         messages = [{"role": m.role, "content": m.content} for m in req.history]
         messages.append({"role": "user", "content": prompt})
 
+        # Haiku 5.5 thinks by default and the thinking counts toward max_tokens,
+        # so leave room for it; it only accepts default sampling, so no temperature
         response = anthropic_client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=4096,
-            temperature=0.3,
+            model="claude-haiku-5-5",
+            max_tokens=16000,
+            output_config={"effort": "medium"},
             system=SYSTEM_PROMPT,
             messages=messages,
         )
 
+        if response.stop_reason == "refusal":
+            return AIQueryResponse(answer="I can't help with that request. Try asking about your leads another way.")
+
         answer = "".join(
             block.text for block in response.content if block.type == "text"
         )
+        if not answer:
+            raise HTTPException(status_code=502, detail="The assistant returned an empty answer.")
         return AIQueryResponse(answer=answer)
+
+    except HTTPException:
+        raise
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

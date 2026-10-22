@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatDate } from './dateUtils';
+import { daysUntil, formatDate, parseLocalDate, toLocalDateString, toLocalDateTimeString } from './dateUtils';
 
 describe('dateUtils', () => {
   describe('formatDate', () => {
@@ -24,5 +24,27 @@ describe('dateUtils', () => {
     it('returns impossible dates unchanged', () => {
       expect(formatDate('2024-02-31')).toBe('2024-02-31');
     });
+  });
+});
+
+describe('local date helpers', () => {
+  it('formats local dates and datetimes', () => {
+    const d = new Date(2026, 0, 5, 9, 7);
+    expect(toLocalDateString(d)).toBe('2026-01-05');
+    expect(toLocalDateTimeString(d)).toBe('2026-01-05T09:07');
+  });
+
+  it('parses local strings and rejects bad ones', () => {
+    expect(parseLocalDate('2026-10-22T14:30')).toEqual(new Date(2026, 9, 22, 14, 30));
+    expect(parseLocalDate('2026-02-31')).toBeNull();
+    expect(parseLocalDate('')).toBeNull();
+  });
+
+  it('counts whole local days until a date', () => {
+    const now = new Date(2026, 9, 22, 23, 30);
+    expect(daysUntil('2026-10-22', now)).toBe(0);
+    expect(daysUntil('2026-10-23', now)).toBe(1);
+    expect(daysUntil('2026-10-21', now)).toBe(-1);
+    expect(daysUntil('', now)).toBeNull();
   });
 });
