@@ -1,5 +1,6 @@
 // LeadScoreBadge.jsx
 import { PRIORITY_TONES } from '../constants/leadOptions';
+import { cleanActionText } from '../utils/followUp';
 import Badge from './ui/Badge';
 import Skeleton from './ui/Skeleton';
 
@@ -19,7 +20,7 @@ function LeadScoreBadge({ score }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <Badge tone={PRIORITY_TONES[data.priority] ?? 'neutral'} size="sm">Score {data.score}</Badge>
-      <span className="text-caption text-fg-muted">{data.recommended_action}</span>
+      <span className="text-caption text-fg-muted">{cleanActionText(data.recommended_action)}</span>
     </div>
   );
 
