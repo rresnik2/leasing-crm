@@ -1,5 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { query, Message } from '../models/aiQuery.ts';
+import Button from './ui/Button';
+import IconButton from './ui/IconButton';
+import Input from './ui/Input';
+import Spinner from './ui/Spinner';
+
+// example questions shown before the first message
+const SUGGESTIONS = [
+  'How many leads toured this week?',
+  'Show me all approved applications',
+  'Which leads need follow-up?',
+];
 
 // Leasing CRM assistant
 export default function ChatAssistant() {
@@ -12,6 +23,28 @@ export default function ChatAssistant() {
   const [input, setInput] = useState('');
   // for loading state
   const [loading, setLoading] = useState(false);
+
+  // focus targets and scroll area
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const wasOpen = useRef(false);
+
+  // focus the input on open, hand focus back to the launcher on close
+  useEffect(() => {
+    if (isOpen) {
+      inputRef.current?.focus();
+    } else if (wasOpen.current) {
+      launcherRef.current?.focus();
+    }
+    wasOpen.current = isOpen;
+  }, [isOpen]);
+
+  // keep the newest message in view
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [messages, loading, isOpen]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -34,53 +67,88 @@ export default function ChatAssistant() {
     }
   };
 
+  const handleSuggestion = (text: string) => {
+    setInput(text);
+    inputRef.current?.focus();
+  };
+
   return (
     <>
       {/* Floating Chat Button */}
       {!isOpen && (
-        <button
+        <IconButton
+          ref={launcherRef}
+          variant="primary"
+          label="Open leasing assistant"
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-all z-50"
+          className="fixed bottom-6 right-6 z-floating !h-14 !w-14 !rounded-full shadow-raised"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
           </svg>
-        </button>
+        </IconButton>
       )}
 
-      {/* Chat Panel */}
+      {/* Chat Panel (non-modal: no focus trap) */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 w-96 h-[600px] bg-white rounded-lg shadow-2xl flex flex-col z-50 border border-gray-200">
+        <section
+          role="dialog"
+          aria-label="Leasing assistant"
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setIsOpen(false);
+          }}
+          className="fixed bottom-6 right-6 z-floating flex w-[calc(100vw-3rem)] sm:w-96 h-[min(600px,calc(100vh-3rem))] flex-col rounded-card border border-line bg-surface shadow-overlay motion-safe:animate-scale-in"
+        >
           {/* Header */}
-          <div className="bg-blue-600 text-white p-4 rounded-t-lg flex justify-between items-center">
-            <h3 className="font-semibold">Leasing AI Assistant</h3>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-white hover:text-gray-200"
-            >
-              ✕
-            </button>
+          <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
+            <div className="min-w-0">
+              <h2 className="text-label text-fg">Leasing assistant</h2>
+              <p className="text-caption text-fg-muted">Ask about your leads</p>
+            </div>
+            <IconButton label="Close assistant" size="sm" onClick={() => setIsOpen(false)}>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                focusable="false"
+                className="h-4 w-4"
+              >
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </IconButton>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          <div ref={scrollRef} aria-live="polite" className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.length === 0 ? (
-              <div className="text-gray-500 text-center mt-8">
-                <p className="mb-2">👋 Hi! I can help you query your leads.</p>
-                <p className="text-sm">Try asking:</p>
-                <ul className="text-sm mt-2 space-y-1">
-                  <li>"How many leads toured this week?"</li>
-                  <li>"Show me all approved applications"</li>
-                  <li>"Which leads need follow-up?"</li>
-                </ul>
+              <div className="space-y-3">
+                <p className="text-body text-fg-muted">Hi! I can help you query your leads.</p>
+                <div className="flex flex-col gap-2">
+                  {SUGGESTIONS.map((suggestion) => (
+                    <Button
+                      key={suggestion}
+                      variant="secondary"
+                      size="sm"
+                      fullWidth
+                      className="!h-auto py-1.5 text-left !justify-start"
+                      onClick={() => handleSuggestion(suggestion)}
+                    >
+                      {suggestion}
+                    </Button>
+                  ))}
+                </div>
               </div>
             ) : (
               messages.map((msg, index) => (
                 <div
                   key={index}
-                  className={`p-3 rounded-lg ${msg.role === 'user'
-                      ? 'bg-blue-600 text-white ml-auto max-w-[80%]'
-                      : 'bg-gray-100 text-gray-900 mr-auto max-w-[80%]'
+                  className={`w-fit max-w-[80%] rounded-card px-3 py-2 text-body whitespace-pre-wrap break-words ${msg.role === 'user'
+                      ? 'ml-auto rounded-br-sm bg-brand text-fg-inverse'
+                      : 'mr-auto rounded-bl-sm bg-surface-muted text-fg'
                     }`}
                 >
                   {msg.content}
@@ -88,33 +156,38 @@ export default function ChatAssistant() {
               ))
             )}
             {loading && (
-              <div className="bg-gray-100 text-gray-900 p-3 rounded-lg mr-auto max-w-[80%]">
-                Thinking...
+              <div className="mr-auto w-fit max-w-[80%] rounded-card rounded-bl-sm bg-surface-muted px-3 py-2 text-body text-fg">
+                <span className="inline-flex items-center gap-2">
+                  <Spinner size="sm" aria-hidden="true" />
+                  Thinking…
+                </span>
               </div>
             )}
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t border-gray-200">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Ask about your leads..."
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button
-                onClick={handleSend}
-                disabled={loading || !input.trim()}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-              >
-                Send
-              </button>
-            </div>
-          </div>
-        </div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSend();
+            }}
+            className="flex gap-2 border-t border-line p-3"
+          >
+            <Input
+              ref={inputRef}
+              aria-label="Message"
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask about your leads..."
+              autoComplete="off"
+              className="min-w-0 flex-1"
+            />
+            <Button type="submit" disabled={loading || !input.trim()}>
+              Send
+            </Button>
+          </form>
+        </section>
       )}
     </>
   );

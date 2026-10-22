@@ -1,3 +1,51 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Design tokens. Values are RGB channels so Tailwind opacity modifiers work.
+   Names map to Tailwind colors in tailwind.config.js (e.g. --color-fg-muted -> text-fg-muted). */
+@layer base {
+  :root {
+    /* Neutrals */
+    --color-canvas: 241 245 249;        /* slate-100: page background */
+    --color-surface: 255 255 255;       /* cards, panels, modals */
+    --color-surface-muted: 248 250 252; /* slate-50: subtle fills, hover rows */
+    --color-line: 226 232 240;          /* slate-200: dividers, card borders */
+    --color-line-strong: 203 213 225;   /* slate-300: control borders */
+    --color-fg: 15 23 42;               /* slate-900: primary text */
+    --color-fg-muted: 71 85 105;        /* slate-600: secondary text, labels */
+    --color-fg-subtle: 100 116 139;     /* slate-500: captions, placeholders (on surface only) */
+    --color-fg-inverse: 255 255 255;    /* text on solid fills */
+
+    /* Brand */
+    --color-brand: 37 99 235;           /* blue-600 */
+    --color-brand-hover: 29 78 216;     /* blue-700 */
+    --color-brand-subtle: 219 234 254;  /* blue-100 */
+    --color-brand-strong: 30 64 175;    /* blue-800: text on brand-subtle */
+
+    /* Intents */
+    --color-danger: 220 38 38;          /* red-600 */
+    --color-danger-hover: 185 28 28;    /* red-700 */
+    --color-danger-subtle: 254 226 226; /* red-100 */
+    --color-danger-strong: 153 27 27;   /* red-800 */
+    --color-success: 22 163 74;         /* green-600: icons and fills, not small text */
+    --color-success-subtle: 220 252 231;
+    --color-success-strong: 22 101 52;  /* green-800 */
+    --color-warning: 217 119 6;         /* amber-600: icons and fills, not small text */
+    --color-warning-subtle: 254 243 199;
+    --color-warning-strong: 146 64 14;  /* amber-800 */
+
+    --color-focus: 59 130 246;          /* blue-500 */
+  }
+
+  body {
+    @apply bg-canvas text-fg antialiased;
+  }
+}
+
+@layer components {
+  /* Shared keyboard focus treatment for every interactive primitive. */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface;
+  }
+}

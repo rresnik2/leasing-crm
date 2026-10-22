@@ -2,6 +2,11 @@
 import { useState } from 'react';
 
 import PhoneInput from './PhoneInput';
+import Button from './ui/Button';
+import Card from './ui/Card';
+import Input from './ui/Input';
+import Select from './ui/Select';
+import { UNIT_TYPES } from '../constants/leadOptions';
 
 function AddLeadForm({ onAddLead }) {
     // Create state for form inputs
@@ -10,11 +15,6 @@ function AddLeadForm({ onAddLead }) {
     const [phone, setPhone] = useState('');
     const [moveInDate, setMoveInDate] = useState('');
     const [unitType, setUnitType] = useState('');
-
-    const handlePhoneChange = (e) => {
-        const formatted = formatPhoneNumber(e.target.value);
-        setPhone(formatted);
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault(); // Prevent page refresh
@@ -40,69 +40,52 @@ function AddLeadForm({ onAddLead }) {
     };
 
     return (
-        <form className="bg-white p-6 rounded-lg shadow-md mb-6" onSubmit={handleSubmit}>
-            <h2 className="text-xl font-bold mb-4">Add New Lead</h2>
+        <Card as="form" padding="lg" onSubmit={handleSubmit}>
+            <h2 className="text-heading text-fg">Add new lead</h2>
+            <p className="text-body text-fg-muted">New leads start as New Inquiry.</p>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Name:</label>
-                <input
+            <div className="grid gap-4 sm:grid-cols-2 mt-5">
+                <Input
+                    label="Name"
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full p-2 border rounded"
+                    autoComplete="name"
                     required
                 />
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Email:</label>
-                <input
+                <Input
+                    label="Email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full p-2 border rounded"
+                    autoComplete="email"
                     required
                 />
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Phone:</label>
                 <PhoneInput
+                    label="Phone"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     required
                 />
-            </div>
-
-            <div>
-                <label className="block text-gray-700 mb-2">Move-in Date:</label>
-                <input
+                <Input
+                    label="Move-in date"
                     type="date"
                     value={moveInDate}
                     onChange={(e) => setMoveInDate(e.target.value)}
-                    className="w-full p-2 border rounded mb-2"
+                />
+                <Select
+                    label="Unit type"
+                    value={unitType}
+                    onChange={(e) => setUnitType(e.target.value)}
+                    options={UNIT_TYPES}
+                    placeholder="Select unit type"
                 />
             </div>
 
-            <div>
-                <label className="block text-gray-700 mb-2 ">Unit Type:</label>
-                <select
-                    value={unitType}
-                    onChange={(e) => setUnitType(e.target.value)}
-                    className="w-full p-2 border rounded mb-3"
-                >
-                    <option value="Studio">Studio</option>
-                    <option value="1 Bedroom">1 Bedroom</option>
-                    <option value="2 Bedroom">2 Bedroom</option>
-                    <option value="3 Bedroom">3 Bedroom</option>
-                </select>
+            <div className="mt-6 flex justify-end">
+                <Button type="submit">Add lead</Button>
             </div>
-
-            <button
-                type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-                Add Lead
-            </button>
-        </form>
+        </Card>
     );
 }
 
